@@ -11,4 +11,5 @@ func TestTruncate(t *testing.T) {
 	assert.Equal(t, Truncate(a, 100, ""), a)
 	assert.Equal(t, Truncate(a, 5, ""), "hello")
 	assert.Equal(t, Truncate(a, 5, "..."), "he...")
+	assert.Equal(t, Truncate(a, 6, "**"), "hell**")
 }
