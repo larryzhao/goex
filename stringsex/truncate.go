@@ -11,5 +11,5 @@ func Truncate(s string, length int, suffix string) string {
 	rr := []rune(s)
 
 	suffixLen := len(suffix)
-	return fmt.Sprintf("%s%s", string(rr[0:length-suffixLen]), suffix)
+	return fmt.Sprintf("%s%s", string(rr[:length-suffixLen]), suffix)
 }
