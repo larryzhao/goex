@@ -1,4 +1,4 @@
-package stringsex
+package stringsx
 
 import "fmt"
 
