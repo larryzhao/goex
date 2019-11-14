@@ -1,4 +1,4 @@
-module git.jianshu.io/jianshu/goex
+module github.com/larryzhao/goex
 
 go 1.13
 
