@@ -15,3 +15,10 @@ func MaxInt64(a int64, b int64) int64 {
 
 	return b
 }
+
+func MaxFloat64(a float64, b float64) float64 {
+	if a >= b {
+		return a
+	}
+	return b
+}
