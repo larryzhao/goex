@@ -1,4 +1,4 @@
-package intsx
+package intx
 
 import (
 	"errors"
