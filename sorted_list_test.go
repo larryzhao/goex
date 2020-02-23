@@ -1,9 +1,9 @@
 package goex
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
+	"sync"
 	"testing"
 	"time"
 )
@@ -94,7 +94,6 @@ func BenchmarkSortedListSequenceAdd(b *testing.B) {
 func BenchmarkSortedListRandomAdd(b *testing.B) {
 	count := b.N
 	numbers := make([]int64, count)
-	fmt.Println(count)
 
 	rs := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(rs)
@@ -106,6 +105,50 @@ func BenchmarkSortedListRandomAdd(b *testing.B) {
 	for i := 0; i < count; i++ {
 		list.Add(numbers[i], "val")
 	}
+}
+
+type concurrentAddJob struct {
+	Score int64
+	Val interface{}
+}
+
+func concurrentAdd(list *SortedList, ch chan *concurrentAddJob, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for job := range ch {
+		list.Add(job.Score, job.Val)
+	}
+}
+
+func BenchmarkSortedListConcurrentAdd(b *testing.B) {
+	count := b.N
+	numbers := make([]int64, count)
+
+	rs := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(rs)
+	for i := 0; i < count; i++ {
+		numbers[i] = r.Int63()
+	}
+
+	concurrency := 20
+	list := NewSortedList()
+	ch := make(chan *concurrentAddJob, 20)
+	wg := &sync.WaitGroup{}
+
+	for i := 0; i < concurrency; i++ {
+		wg.Add(1)
+		go concurrentAdd(list, ch, wg)
+	}
+
+	for i := 0; i < count; i++ {
+		ch <- &concurrentAddJob{
+			Score: numbers[i],
+			Val:   "val",
+		}
+	}
+
+	close(ch)
+	wg.Wait()
 }
 
 func extractListToSlice(list *SortedList) []string {

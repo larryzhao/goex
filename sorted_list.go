@@ -116,12 +116,7 @@ func (list *SortedList) PopScoreLowerThan(limit string, count uint32) []interfac
 	var current *sortedListItem
 	var idx uint32
 
-	if count == 0 || limit == "-inf" || list.Empty() {
-		return []interface{}{}
-	}
-
 	up := upperComparer(limit)
-
 	var results []interface{}
 
 	list.mu.Lock()
@@ -132,6 +127,10 @@ func (list *SortedList) PopScoreLowerThan(limit string, count uint32) []interfac
 		}
 		list.mu.Unlock()
 	}()
+
+	if count == 0 || limit == "-inf" || list.Empty() {
+		return []interface{}{}
+	}
 
 	current = list.head
 	for idx < count {
@@ -146,20 +145,6 @@ func (list *SortedList) PopScoreLowerThan(limit string, count uint32) []interfac
 
 	return results
 }
-
-//func (list *SortedList) PopByScore(lower string, upper string, count uint32) []interface{} {
-//	lc := lowComparer(lower)
-//	uc := upperComparer(upper)
-//
-//	results := make([]interface{}, count)
-//	defer list.mu.Unlock()
-//	list.mu.Lock()
-//
-//	idx := 0
-//	for idx < count {
-//
-//	}
-//}
 
 func lowComparer(limit string) func(score int64) bool {
 	if limit == "-inf" {
