@@ -6,15 +6,14 @@ import (
 	"sync"
 )
 
-
 var maxScore int64 = math.MaxInt64
 var minScore int64 = math.MinInt64
 
 type sortedListItem struct {
-	Val         interface{}
-	Score 		int64
-	Next        *sortedListItem
-	Prev		*sortedListItem
+	Val   interface{}
+	Score int64
+	Next  *sortedListItem
+	Prev  *sortedListItem
 }
 
 type SortedList struct {
@@ -47,7 +46,7 @@ func (list *SortedList) Add(score int64, val interface{}) {
 		Val:   val,
 		Score: score,
 		Next:  nil,
-		Prev: 	nil,
+		Prev:  nil,
 	}
 
 	// when list is empty, the item is the first
@@ -134,7 +133,7 @@ func (list *SortedList) PopScoreLowerThan(limit string, count uint32) []interfac
 
 	current = list.head
 	for idx < count {
-		if !up(current.Score) {
+		if current == nil || !up(current.Score) {
 			return results
 		}
 

@@ -1,11 +1,12 @@
 package goex
 
 import (
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewSortedList(t *testing.T) {
@@ -62,7 +63,7 @@ func TestPopScoreLowerThan(t *testing.T) {
 	assert.Equal(t, 2, len(items))
 	assert.Equal(t, "a", items[0].(string))
 	assert.Equal(t, "b", items[1].(string))
-	assert.Equal(t,7, list.Len())
+	assert.Equal(t, 7, list.Len())
 	assert.Equal(t, "c", list.head.Val.(string))
 
 	items = list.PopScoreLowerThan("3000", 10000)
@@ -82,6 +83,13 @@ func TestPopScoreLowerThan(t *testing.T) {
 	assert.Equal(t, "e", items[1].(string))
 	assert.Equal(t, 4, list.Len())
 	assert.Equal(t, "f", list.head.Val.(string))
+
+	items = list.PopScoreLowerThan("10000", 1000)
+	assert.Equal(t, 4, len(items))
+	assert.Equal(t, "f", items[0].(string))
+	assert.Equal(t, "g", items[1].(string))
+	assert.Equal(t, "h", items[2].(string))
+	assert.Equal(t, "i", items[3].(string))
 }
 
 func BenchmarkSortedListSequenceAdd(b *testing.B) {
@@ -109,7 +117,7 @@ func BenchmarkSortedListRandomAdd(b *testing.B) {
 
 type concurrentAddJob struct {
 	Score int64
-	Val interface{}
+	Val   interface{}
 }
 
 func concurrentAdd(list *SortedList, ch chan *concurrentAddJob, wg *sync.WaitGroup) {
